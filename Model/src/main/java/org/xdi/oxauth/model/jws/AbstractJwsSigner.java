@@ -69,7 +69,12 @@ public abstract class AbstractJwsSigner implements JwsSigner {
     }
 
     public boolean validateAccessToken(String accessToken, Jwt idToken) {
-        return validateHash(accessToken, idToken.getClaims().getClaimAsString(JwtClaimName.ACCESS_TOKEN_HASH));
+        String at_hash = idToken.getClaims().getClaimAsString(JwtClaimName.ACCESS_TOKEN_HASH);
+
+        if (StringUtils.isNotBlank(at_hash)) {
+            return validateHash(accessToken, at_hash);
+        }
+        return true;
     }
 
     private boolean validateHash(String tokenCode, String tokenHash) {
